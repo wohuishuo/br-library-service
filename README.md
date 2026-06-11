@@ -2,10 +2,11 @@
 
 # 📚 书库服务 · br-library-service
 
-**超级项目「书域」的内容底座 —— MVP-1**
+**[书域 BookRealm](https://github.com/wohuishuo/book-realm) 电子书平台的内容服务**
 
-把公版书按「书 → 章 → 段」结构化存好,对外提供干净的 REST 内容接口。
-平台里的阅读 App 从这里拿书,AI 服务从这里取段落做向量化。
+书域是一个拆成 5 个独立模块的电子书平台;本仓是其中的"内容底座":
+把公版书按「书 → 章 → 段」结构化存好,对外提供干净的 REST 接口——
+阅读 App 从这里拿书,AI 问答服务从这里取段落做向量化。
 
 [![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat-square&logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3-6DB33F?style=flat-square&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
