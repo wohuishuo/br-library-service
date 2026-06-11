@@ -2,6 +2,8 @@ package com.bookrealm.library.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "chapters")
@@ -28,24 +30,11 @@ public class Chapter {
     @Column(nullable = false)
     private Integer isDelete = 0;
 
-    @PrePersist
-    protected void onCreate() {
-        createTime = LocalDateTime.now();
-        updateTime = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updateTime = LocalDateTime.now();
-    }
+    @PrePersist protected void onCreate() { createTime = LocalDateTime.now(); updateTime = LocalDateTime.now(); }
+    @PreUpdate  protected void onUpdate() { updateTime = LocalDateTime.now(); }
 
     public Chapter() {}
-
-    public Chapter(Long bookId, Integer seq, String title) {
-        this.bookId = bookId;
-        this.seq = seq;
-        this.title = title;
-    }
+    public Chapter(Long bookId, Integer seq, String title) { this.bookId = bookId; this.seq = seq; this.title = title; }
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
