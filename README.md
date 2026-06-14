@@ -66,7 +66,7 @@ curl "http://localhost:8082/api/books?q=西游"
 | 方法 | 路径 | 说明 |
 |------|------|------|
 | GET | `/api/health` | 服务存活检查 |
-| GET | `/api/books?q=&tag=&page=&size=` | 书籍列表(书名模糊 + 标签过滤 + 分页) |
+| GET | `/api/books?q=&tag=&page=&size=` | 书籍列表(书名模糊 + 标签过滤 + 分页,`page` 从 0 开始) |
 | GET | `/api/books/{id}` | 书籍详情(简介 + 标签 + 章节目录) |
 | GET | `/api/books/{id}/chapters` | 某书的全部章节目录 |
 | GET | `/api/chapters/{id}` | 章节内容(含全部段落) |
