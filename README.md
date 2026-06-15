@@ -10,7 +10,7 @@
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3-6DB33F?style=flat-square&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Spring Data JPA](https://img.shields.io/badge/Spring_Data-JPA-59666C?style=flat-square&logo=hibernate&logoColor=white)](https://spring.io/projects/spring-data-jpa)
 [![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://www.mysql.com/)
-![Tests](https://img.shields.io/badge/tests-6_passing-48cfad?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-7_passing-48cfad?style=flat-square)
 
 [BookRealm 平台书](https://wohuishuo.github.io/book-realm/) · [本服务实战章](https://wohuishuo.github.io/book-realm/project/library)
 
@@ -22,7 +22,7 @@
 
 **br-library-service 是阅读平台的内容底座。**
 
-阅读 App 用它搜索书、打开目录和读取章节;AI 服务用它拉取段落,再做摘要和原文问答。它不处理登录、不处理推荐、不处理 AI,边界越清楚,越容易独立复用。
+阅读 App 用它搜索书、打开目录、读取章节、保存划线和笔记;AI 服务用它拉取段落,再做摘要和原文问答。它不处理登录、不处理推荐、不处理 AI,边界越清楚,越容易独立复用。
 
 ```
 Android App ── GET /api/books?q=西游 ──▶ br-library-service ──▶ MySQL
@@ -65,6 +65,10 @@ Swagger:<http://localhost:8082/api/swagger-ui.html>
 | GET | `/api/books/{id}` | 书籍详情:简介、标签、章节目录 |
 | GET | `/api/books/{id}/chapters` | 某书章节目录 |
 | GET | `/api/chapters/{id}` | 章节内容,含全部段落 |
+| POST | `/api/marks` | 保存段落级划线/笔记 |
+| GET | `/api/chapters/{id}/marks?userId=` | 查询某章节的划线/笔记 |
+| GET | `/api/books/{id}/marks?userId=` | 查询某书的划线/笔记 |
+| DELETE | `/api/marks/{id}?userId=` | 删除划线/笔记 |
 
 统一返回 `{ code, data, message }`,其中 `code=0` 表示成功。
 
