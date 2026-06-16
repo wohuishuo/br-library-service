@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface ReadingMarkRepository extends JpaRepository<ReadingMark, Long> {
     List<ReadingMark> findByUserIdAndChapterIdAndIsDeleteOrderByParagraphSeq(Long userId, Long chapterId, Integer isDelete);
     List<ReadingMark> findByUserIdAndBookIdAndIsDeleteOrderByUpdateTimeDesc(Long userId, Long bookId, Integer isDelete);
+    List<ReadingMark> findByUserIdAndIsDeleteOrderByUpdateTimeDesc(Long userId, Integer isDelete);
+    List<ReadingMark> findByParagraphIdAndIsDeleteOrderByUpdateTimeDesc(Long paragraphId, Integer isDelete);
     Optional<ReadingMark> findByIdAndUserIdAndIsDelete(Long id, Long userId, Integer isDelete);
     Optional<ReadingMark> findByUserIdAndParagraphIdAndIsDelete(Long userId, Long paragraphId, Integer isDelete);
 }

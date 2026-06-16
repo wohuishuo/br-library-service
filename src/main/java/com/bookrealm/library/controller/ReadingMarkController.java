@@ -39,10 +39,74 @@ public class ReadingMarkController {
         return ResultUtils.success(markService.listBook(userId, bookId));
     }
 
+    @Operation(summary = "查询我的划线/笔记")
+    @GetMapping("/users/{userId}/marks")
+    public BaseResponse<List<ReadingMarkDtos.MarkItem>> listMine(@PathVariable Long userId) {
+        return ResultUtils.success(markService.listMine(userId));
+    }
+
     @Operation(summary = "删除划线/笔记")
     @DeleteMapping("/marks/{id}")
     public BaseResponse<Boolean> delete(@PathVariable Long id, @RequestParam Long userId) {
         markService.delete(userId, id);
+        return ResultUtils.success(true);
+    }
+
+    @Operation(summary = "发布段评")
+    @PostMapping("/comments")
+    public BaseResponse<ReadingMarkDtos.CommentItem> saveComment(@Valid @RequestBody ReadingMarkDtos.SaveCommentRequest request) {
+        return ResultUtils.success(markService.saveComment(request));
+    }
+
+    @Operation(summary = "查询某段互动")
+    @GetMapping("/paragraphs/{paragraphId}/interactions")
+    public BaseResponse<ReadingMarkDtos.ParagraphInteraction> paragraphInteraction(
+        @PathVariable Long paragraphId,
+        @RequestParam(required = false) Long userId
+    ) {
+        return ResultUtils.success(markService.paragraphInteraction(paragraphId, userId));
+    }
+
+    @Operation(summary = "查询某段段评")
+    @GetMapping("/paragraphs/{paragraphId}/comments")
+    public BaseResponse<List<ReadingMarkDtos.CommentItem>> listParagraphComments(
+        @PathVariable Long paragraphId,
+        @RequestParam(required = false) Long userId
+    ) {
+        return ResultUtils.success(markService.listParagraphComments(paragraphId, userId));
+    }
+
+    @Operation(summary = "查询某书段评")
+    @GetMapping("/books/{bookId}/comments")
+    public BaseResponse<List<ReadingMarkDtos.CommentItem>> listBookComments(
+        @PathVariable Long bookId,
+        @RequestParam(required = false) Long userId
+    ) {
+        return ResultUtils.success(markService.listBookComments(bookId, userId));
+    }
+
+    @Operation(summary = "查询我的段评")
+    @GetMapping("/users/{userId}/comments")
+    public BaseResponse<List<ReadingMarkDtos.CommentItem>> listMyComments(@PathVariable Long userId) {
+        return ResultUtils.success(markService.listMyComments(userId));
+    }
+
+    @Operation(summary = "点赞段评")
+    @PostMapping("/comments/{id}/like")
+    public BaseResponse<ReadingMarkDtos.CommentItem> likeComment(@PathVariable Long id, @RequestParam Long userId) {
+        return ResultUtils.success(markService.likeComment(id, userId));
+    }
+
+    @Operation(summary = "取消点赞段评")
+    @DeleteMapping("/comments/{id}/like")
+    public BaseResponse<ReadingMarkDtos.CommentItem> unlikeComment(@PathVariable Long id, @RequestParam Long userId) {
+        return ResultUtils.success(markService.unlikeComment(id, userId));
+    }
+
+    @Operation(summary = "删除自己的段评")
+    @DeleteMapping("/comments/{id}")
+    public BaseResponse<Boolean> deleteComment(@PathVariable Long id, @RequestParam Long userId) {
+        markService.deleteComment(userId, id);
         return ResultUtils.success(true);
     }
 }

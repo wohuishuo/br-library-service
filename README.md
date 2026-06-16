@@ -10,7 +10,7 @@
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3-6DB33F?style=flat-square&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Spring Data JPA](https://img.shields.io/badge/Spring_Data-JPA-59666C?style=flat-square&logo=hibernate&logoColor=white)](https://spring.io/projects/spring-data-jpa)
 [![MySQL](https://img.shields.io/badge/MySQL-8-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://www.mysql.com/)
-![Tests](https://img.shields.io/badge/tests-7_passing-48cfad?style=flat-square)
+![Tests](https://img.shields.io/badge/tests-9_passing-48cfad?style=flat-square)
 
 [BookRealm 平台书](https://wohuishuo.github.io/book-realm/) · [本服务实战章](https://wohuishuo.github.io/book-realm/project/library)
 
@@ -22,7 +22,7 @@
 
 **br-library-service 是阅读平台的内容底座。**
 
-阅读 App 用它搜索书、打开目录、读取章节、保存划线和笔记;AI 服务用它拉取段落,再做摘要和原文问答。它不处理登录、不处理推荐、不处理 AI,边界越清楚,越容易独立复用。
+阅读 App 用它搜索书、打开目录、读取章节、保存划线、笔记、段评和点赞;AI 服务用它拉取段落,再做摘要和原文问答。它不处理登录、不处理推荐、不处理 AI,边界越清楚,越容易独立复用。
 
 ```
 Android App ── GET /api/books?q=西游 ──▶ br-library-service ──▶ MySQL
@@ -34,9 +34,11 @@ AI Service  ── GET /api/chapters/{id} ─▶       书 / 章 / 段 / 标签
 ```
 Book 1───* Chapter 1───* Paragraph
 Book *───* Tag
+Paragraph 1───* ReadingMark
+Paragraph 1───* ReadingComment 1───* ReadingCommentLike
 ```
 
-段落单独建模,是为了让阅读器能按段展示,也让 RAG 服务能按段落引用原文。
+段落单独建模,是为了让阅读器能按段展示,让 RAG 服务能按段落引用原文,也让划线、笔记、段评这类互动有稳定锚点。
 
 ## 快速开始
 
@@ -68,7 +70,16 @@ Swagger:<http://localhost:8082/api/swagger-ui.html>
 | POST | `/api/marks` | 保存段落级划线/笔记 |
 | GET | `/api/chapters/{id}/marks?userId=` | 查询某章节的划线/笔记 |
 | GET | `/api/books/{id}/marks?userId=` | 查询某书的划线/笔记 |
+| GET | `/api/users/{userId}/marks` | 查询我的划线/笔记 |
 | DELETE | `/api/marks/{id}?userId=` | 删除划线/笔记 |
+| POST | `/api/comments` | 发布段评 |
+| GET | `/api/paragraphs/{id}/interactions?userId=` | 查询某段的我的标记 + 公开段评 |
+| GET | `/api/paragraphs/{id}/comments?userId=` | 查询某段段评 |
+| GET | `/api/books/{id}/comments?userId=` | 查询某书段评 |
+| GET | `/api/users/{userId}/comments` | 查询我的段评 |
+| POST | `/api/comments/{id}/like?userId=` | 点赞段评 |
+| DELETE | `/api/comments/{id}/like?userId=` | 取消点赞 |
+| DELETE | `/api/comments/{id}?userId=` | 删除自己的段评 |
 
 统一返回 `{ code, data, message }`,其中 `code=0` 表示成功。
 
