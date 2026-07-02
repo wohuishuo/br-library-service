@@ -9,7 +9,6 @@ public final class ReadingMarkDtos {
     private ReadingMarkDtos() {}
 
     public record SaveMarkRequest(
-        @NotNull Long userId,
         @NotNull Long bookId,
         @NotNull Long chapterId,
         @NotNull Long paragraphId,
@@ -31,7 +30,6 @@ public final class ReadingMarkDtos {
     ) {}
 
     public record SaveCommentRequest(
-        @NotNull Long userId,
         @NotNull Long bookId,
         @NotNull Long chapterId,
         @NotNull Long paragraphId,

@@ -38,12 +38,12 @@ public class ReadingMarkService {
     }
 
     @Transactional
-    public ReadingMarkDtos.MarkItem save(ReadingMarkDtos.SaveMarkRequest request) {
+    public ReadingMarkDtos.MarkItem save(Long userId, ReadingMarkDtos.SaveMarkRequest request) {
         Paragraph paragraph = paragraphRepo.findById(request.paragraphId())
             .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "段落不存在"));
-        ReadingMark mark = markRepo.findByUserIdAndParagraphIdAndIsDelete(request.userId(), request.paragraphId(), 0)
+        ReadingMark mark = markRepo.findByUserIdAndParagraphIdAndIsDelete(userId, request.paragraphId(), 0)
             .orElseGet(ReadingMark::new);
-        mark.setUserId(request.userId());
+        mark.setUserId(userId);
         mark.setBookId(request.bookId());
         mark.setChapterId(request.chapterId());
         mark.setParagraphId(request.paragraphId());
@@ -74,25 +74,28 @@ public class ReadingMarkService {
 
     @Transactional
     public void delete(Long userId, Long id) {
-        ReadingMark mark = markRepo.findByIdAndUserIdAndIsDelete(id, userId, 0)
+        ReadingMark mark = markRepo.findByIdAndIsDelete(id, 0)
             .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "标记不存在"));
+        if (!mark.getUserId().equals(userId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN, "不能删除他人的标记");
+        }
         mark.setIsDelete(1);
         markRepo.save(mark);
     }
 
     @Transactional
-    public ReadingMarkDtos.CommentItem saveComment(ReadingMarkDtos.SaveCommentRequest request) {
+    public ReadingMarkDtos.CommentItem saveComment(Long userId, ReadingMarkDtos.SaveCommentRequest request) {
         Paragraph paragraph = paragraphRepo.findById(request.paragraphId())
             .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "段落不存在"));
         String content = cleanContent(request.content());
         ReadingComment comment = new ReadingComment();
-        comment.setUserId(request.userId());
+        comment.setUserId(userId);
         comment.setBookId(request.bookId());
         comment.setChapterId(request.chapterId());
         comment.setParagraphId(request.paragraphId());
         comment.setParagraphSeq(paragraph.getSeq());
         comment.setContent(content);
-        return toCommentItem(commentRepo.save(comment), request.userId());
+        return toCommentItem(commentRepo.save(comment), userId);
     }
 
     @Transactional(readOnly = true)
@@ -157,8 +160,11 @@ public class ReadingMarkService {
 
     @Transactional
     public void deleteComment(Long userId, Long id) {
-        ReadingComment comment = commentRepo.findByIdAndUserIdAndIsDelete(id, userId, 0)
+        ReadingComment comment = commentRepo.findByIdAndIsDelete(id, 0)
             .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, "评论不存在"));
+        if (!comment.getUserId().equals(userId)) {
+            throw new BusinessException(ErrorCode.FORBIDDEN, "不能删除他人的评论");
+        }
         comment.setIsDelete(1);
         commentRepo.save(comment);
     }

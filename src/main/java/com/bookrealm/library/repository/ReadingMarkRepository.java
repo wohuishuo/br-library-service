@@ -11,6 +11,7 @@ public interface ReadingMarkRepository extends JpaRepository<ReadingMark, Long> 
     List<ReadingMark> findByUserIdAndBookIdAndIsDeleteOrderByUpdateTimeDesc(Long userId, Long bookId, Integer isDelete);
     List<ReadingMark> findByUserIdAndIsDeleteOrderByUpdateTimeDesc(Long userId, Integer isDelete);
     List<ReadingMark> findByParagraphIdAndIsDeleteOrderByUpdateTimeDesc(Long paragraphId, Integer isDelete);
+    Optional<ReadingMark> findByIdAndIsDelete(Long id, Integer isDelete);
     Optional<ReadingMark> findByIdAndUserIdAndIsDelete(Long id, Long userId, Integer isDelete);
     Optional<ReadingMark> findByUserIdAndParagraphIdAndIsDelete(Long userId, Long paragraphId, Integer isDelete);
 }

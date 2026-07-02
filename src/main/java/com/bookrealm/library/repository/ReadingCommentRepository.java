@@ -10,5 +10,6 @@ public interface ReadingCommentRepository extends JpaRepository<ReadingComment, 
     List<ReadingComment> findByParagraphIdAndIsDeleteOrderByLikeCountDescUpdateTimeDesc(Long paragraphId, Integer isDelete);
     List<ReadingComment> findByBookIdAndIsDeleteOrderByUpdateTimeDesc(Long bookId, Integer isDelete);
     List<ReadingComment> findByUserIdAndIsDeleteOrderByUpdateTimeDesc(Long userId, Integer isDelete);
+    Optional<ReadingComment> findByIdAndIsDelete(Long id, Integer isDelete);
     Optional<ReadingComment> findByIdAndUserIdAndIsDelete(Long id, Long userId, Integer isDelete);
 }
