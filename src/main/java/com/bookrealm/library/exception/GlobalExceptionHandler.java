@@ -25,6 +25,9 @@ public class GlobalExceptionHandler {
         if (e.getCode() == ErrorCode.FORBIDDEN.getCode()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
         }
+        if (e.getCode() == ErrorCode.NOT_FOUND.getCode()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+        }
         return ResponseEntity.ok(body);
     }
 

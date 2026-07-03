@@ -14,7 +14,10 @@ public class JwtUtils {
 
     private final SecretKey key;
 
-    public JwtUtils(@Value("${jwt.secret:${JWT_SECRET:dev-only-secret-please-change-in-production-0123456789abcdef}}") String secret) {
+    public JwtUtils(@Value("${jwt.secret:${JWT_SECRET:}}") String secret) {
+        if (secret == null || secret.isBlank()) {
+            throw new IllegalStateException("jwt.secret or JWT_SECRET must be configured");
+        }
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 

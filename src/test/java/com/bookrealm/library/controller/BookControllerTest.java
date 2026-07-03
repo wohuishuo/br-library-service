@@ -51,7 +51,7 @@ class BookControllerTest {
     void getBook_shouldReturn404_whenNotFound() throws Exception {
         MvcResult result = mockMvc.perform(get("/books/999")
                 .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
+            .andExpect(status().isNotFound())
             .andReturn();
         var node = mapper.readTree(result.getResponse().getContentAsString());
         assertEquals(40400, node.get("code").asInt());

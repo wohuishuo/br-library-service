@@ -84,6 +84,17 @@ class ReadingMarkControllerTest {
     }
 
     @Test
+    void listBookMarksWithoutToken_shouldReturn401() throws Exception {
+        MvcResult result = mockMvc.perform(get("/books/1/marks")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isUnauthorized())
+            .andReturn();
+
+        var node = mapper.readTree(result.getResponse().getContentAsString());
+        assertEquals(40100, node.get("code").asInt());
+    }
+
+    @Test
     void saveAndListAndDeleteMark_shouldWork() throws Exception {
         Long userId = 921001L;
         String body = """
@@ -172,6 +183,36 @@ class ReadingMarkControllerTest {
         var deletedNode = mapper.readTree(deleted.getResponse().getContentAsString());
         assertEquals(40300, deletedNode.get("code").asInt());
         assertEquals("不能删除他人的标记", deletedNode.get("message").asText());
+    }
+
+    @Test
+    void deleteOthersComment_shouldReturn403() throws Exception {
+        Long ownerId = 921151L;
+        Long otherUserId = 921152L;
+        String body = """
+            {
+              "bookId": 1,
+              "chapterId": 1,
+              "paragraphId": 2,
+              "content": "只允许本人删除段评"
+            }
+            """;
+
+        MvcResult saved = mockMvc.perform(post("/comments")
+                .header(HttpHeaders.AUTHORIZATION, bearer(ownerId, 0))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(body))
+            .andExpect(status().isOk())
+            .andReturn();
+        Long id = mapper.readTree(saved.getResponse().getContentAsString()).get("data").get("id").asLong();
+
+        MvcResult deleted = mockMvc.perform(delete("/comments/" + id)
+                .header(HttpHeaders.AUTHORIZATION, bearer(otherUserId, 0)))
+            .andExpect(status().isForbidden())
+            .andReturn();
+        var deletedNode = mapper.readTree(deleted.getResponse().getContentAsString());
+        assertEquals(40300, deletedNode.get("code").asInt());
+        assertEquals("不能删除他人的评论", deletedNode.get("message").asText());
     }
 
     @Test
